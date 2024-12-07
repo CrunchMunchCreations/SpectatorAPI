@@ -1,0 +1,22 @@
+{
+    "required": true,
+    "minVersion": "0.8",
+    "package": "xyz.crunchmunch.spectatorapi.mixin",
+    "compatibilityLevel": "JAVA_21",
+    "mixins": [
+        "AbstractBoatMixin",
+        "AngerManagementMixin",
+        "ChunkMapAccessor",
+        "EntityMixin",
+        "LookAtPlayerGoalMixin",
+        "SculkSensorBlockEntityMixin",
+        "SculkSensorBlockEntityMixin$VibrationUserMixin",
+        "ServerEntityMixin",
+        "TrackedEntityAccessor"
+    ],
+    "client": [
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "schemaVersion": 1,
+    "id": "spectatorapi",
+    "version": "${version}",
+    "name": "SpectatorAPI",
+    "description": "A Fabric server-side custom spectator mod, for creating adventure mode-based spectators, similar to Bukkit minigame servers.",
+    "authors": [],
+    "contact": {},
+    "license": "MIT",
+    "icon": "assets/spectatorapi/icon.png",
+    "environment": "*",
+    "entrypoints": {
+        "main": [
+            "xyz.crunchmunch.spectatorapi.SpectatorAPI"
+        ]
+    },
+    "mixins": [
+        "spectatorapi.mixins.json"
+    ],
+    "depends": {
+        "fabricloader": ">=${loader_version}",
+        "fabric-language-kotlin": ">=${kotlin_loader_version}",
+        "fabric-api": "*",
+        "minecraft": ">=1.21.2"
+    },
+    "breaks": {
+        "minecraft": ">1.21.3"
+    },
+    "accessWidener": "spectatorapi.accesswidener"
+}
