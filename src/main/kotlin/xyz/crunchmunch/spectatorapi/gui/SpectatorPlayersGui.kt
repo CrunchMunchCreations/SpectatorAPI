@@ -15,7 +15,7 @@ import xyz.crunchmunch.spectatorapi.SpectatorEvents
 open class SpectatorPlayersGui(player: ServerPlayer, var page: Int = 0) : SimpleGui(MenuType.GENERIC_9x4, player, false) {
     init {
         this.title = Component.literal("Select a Player to Spectate")
-        val players = this.player.server.playerList.players.toList() // Create a copy of the player list
+        val players = this.player.server!!.playerList.players.toList() // Create a copy of the player list
 
         for (p in players) {
             if (p.isCustomSpectator() && !SpectatorEvents.CHECK_SPECTATOR_VISIBLE.invoker().shouldSpectatorBeVisibleTo(p, player))
@@ -31,7 +31,7 @@ open class SpectatorPlayersGui(player: ServerPlayer, var page: Int = 0) : Simple
                 this.setSkullOwner(p.gameProfile, p.server)
                 this.setCallback { _, type, action, gui ->
                     gui.close()
-                    gui.player.teleportTo(p.serverLevel(), p.x, p.y, p.z, setOf(), p.yRot, p.xRot, true)
+                    gui.player.teleportTo(p.level(), p.x, p.y, p.z, setOf(), p.yRot, p.xRot, true)
                     gui.player.displayClientMessage(Component.literal("Teleported to ")
                         .append(p.displayName ?: p.name), true)
                 }

@@ -198,7 +198,7 @@ class SpectatorAPI : ModInitializer {
             if (handler.player.tags.contains(SPECTATOR_ENTITY_TAG) && !handler.player.isCustomSpectator()) {
                 spectators.add(handler.player.uuid)
 
-                val entityMap = (handler.player.serverLevel().chunkSource.chunkMap as ChunkMapAccessor).entityMap
+                val entityMap = (handler.player.level().chunkSource.chunkMap as ChunkMapAccessor).entityMap
                 val serverEntity = (entityMap.get(handler.player.id) as TrackedEntityAccessor).serverEntity
 
                 for (player in server.playerList.players) {
@@ -279,10 +279,10 @@ class SpectatorAPI : ModInitializer {
                 this.giveSpectatorCompass()
             }
 
-            val entityMap = (this.serverLevel().chunkSource.chunkMap as ChunkMapAccessor).entityMap
+            val entityMap = (this.level().chunkSource.chunkMap as ChunkMapAccessor).entityMap
             val serverEntity = (entityMap.get(this.id) as TrackedEntityAccessor).serverEntity
 
-            for (player in this.server.playerList.players) {
+            for (player in this.server!!.playerList.players) {
                 // Ignore self, because as it turns out, if you remove yourself, you end up having a VERY interesting
                 // out-of-body experience
                 if (player == this)
@@ -320,7 +320,7 @@ class SpectatorAPI : ModInitializer {
 
             this.removeEffect(MobEffects.INVISIBILITY)
 
-            val items = this.inventory.items.toList()
+            val items = this.inventory.toList()
             for (stack in items) {
                 if (stack.isSpectatorCompass()) {
                     this.inventory.removeItem(stack)
@@ -328,10 +328,10 @@ class SpectatorAPI : ModInitializer {
                 }
             }
 
-            val entityMap = (this.serverLevel().chunkSource.chunkMap as ChunkMapAccessor).entityMap
+            val entityMap = (this.level().chunkSource.chunkMap as ChunkMapAccessor).entityMap
             val serverEntity = (entityMap.get(this.id) as TrackedEntityAccessor).serverEntity
 
-            for (player in this.server.playerList.players) {
+            for (player in this.server!!.playerList.players) {
                 if (player == this)
                     continue
 
@@ -350,7 +350,7 @@ class SpectatorAPI : ModInitializer {
                 return false
 
             val data = this.get(DataComponents.CUSTOM_DATA) ?: return false
-            return data.contains(SPECTATOR_COMPASS_DATA) && data.copyTag().getBoolean(SPECTATOR_COMPASS_DATA)
+            return data.contains(SPECTATOR_COMPASS_DATA) && data.copyTag().getBoolean(SPECTATOR_COMPASS_DATA).orElse(false)
         }
     }
 }
