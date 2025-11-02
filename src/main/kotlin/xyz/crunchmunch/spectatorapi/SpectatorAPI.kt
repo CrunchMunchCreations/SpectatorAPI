@@ -6,11 +6,11 @@ import eu.pb4.sgui.api.gui.SimpleGui
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback
 import net.fabricmc.fabric.api.event.player.UseBlockCallback
 import net.fabricmc.fabric.api.event.player.UseEntityCallback
 import net.fabricmc.fabric.api.event.player.UseItemCallback
-import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.minecraft.ChatFormatting
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands
@@ -19,6 +19,7 @@ import net.minecraft.core.component.DataComponents
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.server.notifications.EmptyNotificationService
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.effect.MobEffectInstance
@@ -37,7 +38,7 @@ import java.util.function.Function
 class SpectatorAPI : ModInitializer {
     override fun onInitialize() {
         UseItemCallback.EVENT.register { player, level, hand ->
-            if (level.isClientSide())
+            if (level.isClientSide)
                 return@register InteractionResult.PASS
 
             if (player !is ServerPlayer)
@@ -59,7 +60,7 @@ class SpectatorAPI : ModInitializer {
         }
 
         UseEntityCallback.EVENT.register { player, level, hand, entity, hit ->
-            if (level.isClientSide())
+            if (level.isClientSide)
                 return@register InteractionResult.PASS
 
             if (player !is ServerPlayer)
@@ -77,7 +78,7 @@ class SpectatorAPI : ModInitializer {
         }
 
         UseBlockCallback.EVENT.register { player, level, hand, hit ->
-            if (level.isClientSide())
+            if (level.isClientSide)
                 return@register InteractionResult.PASS
 
             if (player !is ServerPlayer)
@@ -91,7 +92,7 @@ class SpectatorAPI : ModInitializer {
         }
 
         AttackEntityCallback.EVENT.register { player, level, hand, entity, hit ->
-            if (level.isClientSide())
+            if (level.isClientSide)
                 return@register InteractionResult.PASS
 
             if (player !is ServerPlayer)
@@ -194,22 +195,28 @@ class SpectatorAPI : ModInitializer {
 
         // If the server crashes, the spectator states wouldn't persist except for being in a tag,
         // so check the tags and add them back in.
-        ServerPlayConnectionEvents.JOIN.register { handler, sender, server ->
-            if (handler.player.tags.contains(SPECTATOR_ENTITY_TAG) && !handler.player.isCustomSpectator()) {
-                spectators.add(handler.player.uuid)
+        ServerLifecycleEvents.SERVER_STARTING.register { server ->
+            server.notificationManager().registerService(object : EmptyNotificationService() {
+                override fun playerJoined(player: ServerPlayer) {
+                    super.playerJoined(player)
 
-                val entityMap = (handler.player.level().chunkSource.chunkMap as ChunkMapAccessor).entityMap
-                val serverEntity = (entityMap.get(handler.player.id) as TrackedEntityAccessor).serverEntity
+                    if (player.tags.contains(SPECTATOR_ENTITY_TAG) && !player.isCustomSpectator()) {
+                        spectators.add(player.uuid)
 
-                for (player in server.playerList.players) {
-                    if (player == handler.player)
-                        continue
+                        val entityMap = (player.level().chunkSource.chunkMap as ChunkMapAccessor).entityMap
+                        val serverEntity = (entityMap.get(player.id) as TrackedEntityAccessor).serverEntity
 
-                    if (!SpectatorEvents.CHECK_SPECTATOR_VISIBLE.invoker().shouldSpectatorBeVisibleTo(handler.player, player)) {
-                        serverEntity.removePairing(player)
+                        for (p in server.playerList.players) {
+                            if (player == p)
+                                continue
+
+                            if (!SpectatorEvents.CHECK_SPECTATOR_VISIBLE.invoker().shouldSpectatorBeVisibleTo(player, p)) {
+                                serverEntity.removePairing(p)
+                            }
+                        }
                     }
                 }
-            }
+            })
         }
     }
 
