@@ -349,8 +349,8 @@ class SpectatorAPI : ModInitializer {
             if (!this.`is`(Items.COMPASS))
                 return false
 
-            val data = this.get(DataComponents.CUSTOM_DATA) ?: return false
-            return data.contains(SPECTATOR_COMPASS_DATA) && data.copyTag().getBoolean(SPECTATOR_COMPASS_DATA).orElse(false)
+            val data = this.get(DataComponents.CUSTOM_DATA)?.copyTag() ?: return false
+            return data.contains(SPECTATOR_COMPASS_DATA) && data.getBoolean(SPECTATOR_COMPASS_DATA).orElse(false)
         }
     }
 }
