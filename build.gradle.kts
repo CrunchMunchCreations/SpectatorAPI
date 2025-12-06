@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "2.2.21"
-    id("fabric-loom") version "1.11-SNAPSHOT"
+    id("fabric-loom") version "1.13-SNAPSHOT"
     id("maven-publish")
 }
 
@@ -33,13 +33,16 @@ repositories {
 
 dependencies {
     // To change the versions see the gradle.properties file
-    minecraft("com.mojang:minecraft:${project.property("minecraft_version")}")
-    mappings(loom.officialMojangMappings())
-    modImplementation("net.fabricmc:fabric-loader:${project.property("loader_version")}")
-    modImplementation("net.fabricmc:fabric-language-kotlin:${project.property("kotlin_loader_version")}")
+    if (rootProject == project) {
+        minecraft("com.mojang:minecraft:${project.property("minecraft_version")}")
+        mappings(loom.officialMojangMappings())
 
-    modImplementation("net.fabricmc.fabric-api:fabric-api:${project.property("fabric_version")}")
-    include(modApi("eu.pb4:sgui:${project.property("sgui_version")}")!!)
+        modImplementation("net.fabricmc:fabric-loader:${project.property("loader_version")}")
+        modImplementation("net.fabricmc:fabric-language-kotlin:${project.property("kotlin_loader_version")}")
+
+        modImplementation("net.fabricmc.fabric-api:fabric-api:${project.property("fabric_version")}")
+        include(modApi("eu.pb4:sgui:${project.property("sgui_version")}")!!)
+    }
 }
 
 tasks.processResources {
