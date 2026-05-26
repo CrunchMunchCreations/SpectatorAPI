@@ -2,9 +2,9 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "2.3.21"
-    id("net.fabricmc.fabric-loom") version "1.16-SNAPSHOT"
-    id("maven-publish")
+    alias(libs.plugins.kotlin)
+    alias(libs.plugins.fabric.loom)
+    `maven-publish`
 }
 
 version = project.property("mod_version") as String
@@ -14,7 +14,7 @@ base {
     archivesName.set(project.property("archives_base_name") as String)
 }
 
-val targetJavaVersion = 21
+val targetJavaVersion = 25
 java {
     toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
     // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
@@ -28,20 +28,20 @@ loom {
 }
 
 repositories {
-    maven("https://maven.nucleoid.xyz")
+    maven("https://maven.nucleoid.xyz/releases")
+    maven("https://jitpack.io")
 }
 
 dependencies {
-    // To change the versions see the gradle.properties file
-    if (rootProject == project) {
-        minecraft("com.mojang:minecraft:${project.property("minecraft_version")}")
+    minecraft(libs.minecraft)
 
-        implementation("net.fabricmc:fabric-loader:${project.property("loader_version")}")
-        implementation("net.fabricmc:fabric-language-kotlin:${project.property("kotlin_loader_version")}")
+    implementation(libs.fabric.loader)
+    implementation(libs.fabric.api)
 
-        implementation("net.fabricmc.fabric-api:fabric-api:${project.property("fabric_version")}")
-        include(api("eu.pb4:sgui:${project.property("sgui_version")}")!!)
-    }
+    implementation(libs.fabric.kotlin)
+    api(libs.brigadier.kotlin)
+
+    api(libs.sgui)
 }
 
 tasks.processResources {
