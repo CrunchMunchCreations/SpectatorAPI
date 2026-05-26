@@ -132,7 +132,7 @@ class SpectatorAPI : ModInitializer {
 
         CommandRegistrationCallback.EVENT.register { dispatcher, _, _ ->
             dispatcher.register(Commands.literal("spectatorapi")
-                .requires { it.hasPermission(2) }
+                .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                 .then(
                     Commands.literal("set")
                         .then(
