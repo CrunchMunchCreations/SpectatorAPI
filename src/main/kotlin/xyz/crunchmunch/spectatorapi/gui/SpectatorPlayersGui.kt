@@ -28,11 +28,11 @@ open class SpectatorPlayersGui(player: ServerPlayer, var page: Int = 0) : Simple
                     this.set(DataComponents.LORE, ItemLore(listOf(Component.literal("[Spectator]"))))
                 }
             }).apply {
-                this.setSkullOwner(p.gameProfile, p.server)
+                this.setProfile(p.gameProfile)
                 this.setCallback { _, type, action, gui ->
                     gui.close()
                     gui.player.teleportTo(p.level(), p.x, p.y, p.z, setOf(), p.yRot, p.xRot, true)
-                    gui.player.displayClientMessage(Component.literal("Teleported to ")
+                    gui.player.sendSystemMessage(Component.literal("Teleported to ")
                         .append(p.displayName ?: p.name), true)
                 }
             })

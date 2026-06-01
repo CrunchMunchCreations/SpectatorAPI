@@ -200,7 +200,7 @@ class SpectatorAPI : ModInitializer {
                 override fun playerJoined(player: ServerPlayer) {
                     super.playerJoined(player)
 
-                    if (player.tags.contains(SPECTATOR_ENTITY_TAG) && !player.isCustomSpectator()) {
+                    if (player.entityTags().contains(SPECTATOR_ENTITY_TAG) && !player.isCustomSpectator()) {
                         spectators.add(player.uuid)
 
                         val entityMap = (player.level().chunkSource.chunkMap as ChunkMapAccessor).entityMap
