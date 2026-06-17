@@ -1,21 +1,21 @@
 [versions]
 # https://fabricmc.net/develop
-fabric-loom = "1.16-SNAPSHOT"
-kotlin = "2.3.21"
+fabric-loom = "1.17-SNAPSHOT"
+kotlin = "2.4.0"
 
-minecraft = "26.1.2"
+minecraft = "26.2"
 
 # https://fabricmc.net/develop
-fabric-loader = "0.19.2"
-fabric-api = "0.149.1+26.1.2"
+fabric-loader = "0.19.3"
+fabric-api = "0.152.1+26.2"
 # https://modrinth.com/mod/fabric-language-kotlin/versions
-fabric-kotlin = "1.13.11+kotlin.2.3.21"
+fabric-kotlin = "1.13.12+kotlin.2.4.0"
 
 # https://github.com/Phyrone/brigadier-kotlin
 brigadier-kotlin = "1.4.2"
 
 # https://maven.nucleoid.xyz/eu/pb4/sgui/
-sgui = "2.0.0+26.1"
+sgui = "2.1.0+26.2"
 
 [libraries]
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
