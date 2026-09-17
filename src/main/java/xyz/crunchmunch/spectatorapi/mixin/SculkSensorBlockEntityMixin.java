@@ -11,7 +11,7 @@ import xyz.crunchmunch.spectatorapi.SpectatorAPI;
 
 @Mixin(SculkSensorBlockEntity.class)
 public class SculkSensorBlockEntityMixin {
-    @Mixin(targets = "net.minecraft.world.level.block.entity.SculkSensorBlockEntity.VibrationUser")
+    @Mixin(targets = "net.minecraft.world.level.block.entity.SculkSensorBlockEntity$VibrationUser")
     protected static class VibrationUserMixin {
         @ModifyReturnValue(method = "canReceiveVibration", at = @At("RETURN"))
         private boolean cancelNonPlayerEvents(boolean original, @Local(argsOnly = true) GameEvent.Context context) {
